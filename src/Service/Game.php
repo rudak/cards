@@ -6,7 +6,7 @@ use App\Model\Stack;
 
 class Game
 {
-    const MAX_ROUND = 50000;
+    public const MAX_ROUND = 50000;
 
     /**
      * @var Stack
@@ -37,12 +37,12 @@ class Game
     /**
      * @var string
      */
-    private $result;
+    public $result;
 
     /**
      * @var array
      */
-    private $log;
+    public $log;
 
     /**
      * @param array $decks
@@ -60,22 +60,28 @@ class Game
     }
 
 
+    /**
+     * Lance le jeu
+     */
     public function launch(): void
     {
         while ($this->playerOne->countCards() && $this->playerTwo->countCards() && $this->round < self::MAX_ROUND) {
             $this->fight();
         }
         if (!$this->playerOne->countCards()) {
-            $this->result = 'Player 2 win';
+            $this->result = 'Player 2 wins';
             return;
         }
         if (!$this->playerTwo->countCards()) {
-            $this->result = 'Player 1 win';
+            $this->result = 'Player 1 wins';
             return;
         }
-        $this->result = 'Both players win et pis merde';
+        $this->result = 'Both players wins';
     }
 
+    /**
+     * Gestion des comparaison de cartes
+     */
     private function fight(): void
     {
         $this->round++;
@@ -99,7 +105,7 @@ class Game
     }
 
     /**
-     *
+     * Cartes identiques
      */
     private function battle(): void
     {
@@ -113,20 +119,23 @@ class Game
         $this->log[] = sprintf('Cartes retournées : %s VS %s', $card1, $card2);
     }
 
-    private function verifyTheCards()
+    /**
+     * Juste pour avoir quelques infos rapides
+     */
+    private function verifyTheCards(): void
     {
         $sum1 = 0;
         $as1  = 0;
         foreach ($this->playerOne->getAllCards(false) as $card) {
             $sum1 += $card->getValue();
-            $as1  += ($card->getValue() == 14) ? 1 : 0;
+            $as1  += ($card->getValue() === 14) ? 1 : 0;
         }
 
         $sum2 = 0;
         $as2  = 0;
         foreach ($this->playerTwo->getAllCards(false) as $card) {
             $sum2 += $card->getValue();
-            $as2  += ($card->getValue() == 14) ? 1 : 0;
+            $as2  += ($card->getValue() === 14) ? 1 : 0;
         }
 
         $this->log[] = sprintf('Points Joueur 1 : %dpts avec %d As, Points Joueur 2 : %d pts avec %d As', $sum1, $as1, $sum2, $as2);
